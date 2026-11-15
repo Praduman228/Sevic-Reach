@@ -61,7 +61,7 @@ export function getAiGatewayResponseHeaders(providerHeaders: HeadersInit | undef
     }
   });
 
-  headers.forEach((_, name) => {
+  headers.forEach((value, name) => {
     if (name.toLowerCase().startsWith("x-ai-gateway-")) {
       headers.set(name, value);
     }

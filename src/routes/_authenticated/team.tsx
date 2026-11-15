@@ -1,9 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { KeyRound, Trash2, UserPlus } from "lucide-react";
+import { KeyRound, ShieldCheck, Trash2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,8 +11,28 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { addTeamMember, removeTeamMember, resetMemberPassword } from "@/lib/team.functions";
+import { fetchUserRole } from "@/lib/auth-role";
 
 export const Route = createFileRoute("/_authenticated/team")({
+  ssr: false,
+  beforeLoad: async ({ context }) => {
+    let isAdmin = context.isAdmin;
+    if (typeof isAdmin !== "boolean") {
+      let userId: string | undefined = context.user?.id;
+      if (!userId) {
+        const { data } = await supabase.auth.getUser();
+        userId = data.user?.id;
+      }
+      if (!userId) {
+        throw redirect({ to: "/auth" });
+      }
+      const roleInfo = await fetchUserRole(userId);
+      isAdmin = roleInfo.isAdmin;
+    }
+    if (!isAdmin) {
+      throw redirect({ to: "/board" });
+    }
+  },
   head: () => ({
     meta: [
       { title: "Team — Sevic Reach" },
@@ -67,9 +87,17 @@ function TeamPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold">Team</h1>
-        <p className="text-sm text-muted-foreground">Add people with an email and password. They sign in with those — nobody can create their own account.</p>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Team</h1>
+          <p className="text-sm text-muted-foreground">Add people with an email and password. They sign in with those — nobody can create their own account.</p>
+        </div>
+        <Button asChild variant="outline" size="sm" className="gap-1.5 w-fit">
+          <Link to="/admin">
+            <ShieldCheck className="h-4 w-4 text-primary" />
+            Admin Center
+          </Link>
+        </Button>
       </div>
       <form onSubmit={submit} className="grid gap-3 rounded-xl border bg-card p-5 sm:grid-cols-5">
         <div className="space-y-1.5"><Label>Name</Label><Input value={f.fullName} onChange={(e) => setF({ ...f, fullName: e.target.value })} /></div>

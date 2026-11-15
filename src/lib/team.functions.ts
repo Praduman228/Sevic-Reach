@@ -57,3 +57,24 @@ export const resetMemberPassword = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const updateMemberRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d) => z.object({
+    userId: z.string().uuid(),
+    role: z.enum(["admin", "sales"]),
+  }).parse(d))
+  .handler(async ({ data, context }) => {
+    await assertAdmin(context);
+    if (data.userId === context.userId && data.role !== "admin") {
+      throw new Error("You cannot remove your own admin role");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("user_roles").delete().eq("user_id", data.userId);
+    const { error } = await supabaseAdmin.from("user_roles").insert({
+      user_id: data.userId,
+      role: data.role,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });

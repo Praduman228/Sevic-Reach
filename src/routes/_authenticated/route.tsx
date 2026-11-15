@@ -2,28 +2,47 @@ import { createFileRoute, Link, Outlet, redirect, useNavigate } from "@tanstack/
 import { useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect } from "react";
-import { Columns3, Filter, Inbox, ListTodo, LogOut, Megaphone, Tags, Users } from "lucide-react";
+import {
+  Columns3,
+  Filter,
+  Inbox,
+  ListTodo,
+  LogOut,
+  Megaphone,
+  ShieldCheck,
+  Tags,
+  Users,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { processCampaigns } from "@/lib/campaigns.functions";
+import { fetchUserRole, useCurrentUserRole } from "@/lib/auth-role";
 
 export const Route = createFileRoute("/_authenticated")({
   ssr: false,
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw redirect({ to: "/auth" });
-    return { user: data.user };
+    const roleInfo = await fetchUserRole(data.user.id);
+    return { user: data.user, isAdmin: roleInfo.isAdmin, role: roleInfo.role };
   },
   component: Shell,
 });
 
-const NAV = [
+type NavItem = {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  adminOnly?: boolean;
+};
+
+const NAV: readonly NavItem[] = [
   { to: "/board", label: "Pipeline", icon: Columns3 },
   { to: "/funnel", label: "Funnel", icon: Filter },
   { to: "/tasks", label: "Team follow-ups", icon: ListTodo },
   { to: "/replies", label: "Replies", icon: Inbox },
   { to: "/campaign", label: "Campaign", icon: Megaphone },
   { to: "/filters", label: "Tags", icon: Tags },
-  { to: "/team", label: "Team", icon: Users },
+  { to: "/admin", label: "Admin", icon: ShieldCheck, adminOnly: true },
 ] as const;
 
 /** While anyone on the team has the app open, advance running campaigns about once a minute. */
@@ -48,10 +67,15 @@ function useCampaignRunner() {
 }
 
 function Shell() {
-  const { user } = Route.useRouteContext();
+  const context = Route.useRouteContext();
+  const user = context.user;
   const qc = useQueryClient();
   const navigate = useNavigate();
   useCampaignRunner();
+
+  const { data: roleInfo } = useCurrentUserRole(user?.id);
+  const isAdmin = roleInfo?.isAdmin ?? context.isAdmin ?? false;
+  const visibleNav = NAV.filter((n) => !n.adminOnly || isAdmin);
 
   async function signOut() {
     await qc.cancelQueries();
@@ -68,7 +92,7 @@ function Shell() {
             Sevic Reach<span className="text-primary">.</span>
           </Link>
           <nav className="hidden gap-1 md:flex">
-            {NAV.map((n) => (
+            {visibleNav.map((n) => (
               <Link
                 key={n.to}
                 to={n.to}
@@ -91,7 +115,7 @@ function Shell() {
         <Outlet />
       </main>
       <nav className="fixed inset-x-0 bottom-0 z-30 flex overflow-x-auto border-t bg-background md:hidden">
-        {NAV.map((n) => (
+        {visibleNav.map((n) => (
           <Link
             key={n.to}
             to={n.to}

@@ -1,11 +1,11 @@
 # Research Brief Prompt — Shegruh Fit (v2.0)
 
-**Pipeline position:** `shegruh.md` → **this prompt (research brief)** → `product-message-prompt.md`
+**Pipeline position:** `company-knowledge.md` → **this prompt (research brief)** → `product-message-prompt.md`
 
 ## Developer notes (not part of the prompt)
 
 - Paste everything between `=== PROMPT START ===` and `=== PROMPT END ===` as the system prompt. Replace each `{{PLACEHOLDER}}`.
-- `{{SHEGRUH_MD}}` is the full text of `shegruh.md`.
+- `{{SHEGRUH_MD}}` is the full text of `company-knowledge.md`.
 - Give the model web search and page-fetch tools. Without them it runs in `no_web` mode: lower confidence, capped scores.
 - The model returns **Part A** (a human-readable brief, about 90 seconds to read) and **Part B** (a JSON handoff block). Store Part B; the message prompt reads it as its `brief` input. Field names in Part B must not change without updating `product-message-prompt.md`.
 - What this version adds: a weighted 100-point Shegruh Fit score with scoring anchors and hard gates; evidence rules; process-gap signals (the "stuck without a process" thesis); angle selection from the shared A1–A6 library; a structured handoff for tailored messages.
