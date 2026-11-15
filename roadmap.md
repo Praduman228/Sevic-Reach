@@ -1,0 +1,44 @@
+# Sevic Reach roadmap
+- [x] Add Backlog before Outreach: 930 existing unsent Outreach leads classified; new leads default to Backlog, drafts and approvals stay usable, and first provider-accepted email/WhatsApp advances automatically. 45 tests pass; signed-in creation and simulated failed/accepted email outcomes verified, temporary records removed; no real messages sent.
+- [x] Improve WhatsApp-specific tone, research-grounded recovery and complete draft generation without changing email or sending checks; 24 tests pass and a real personalised SheAI draft verified on Anthis Design without sending.
+- [x] Shorten feature, offer and tone prompts; remove draft disclaimer UI and warning acknowledgement gates from manual sends, sequences and approval validation. 35 tests pass; real unsent email drafted on the current lead with no disclaimer or runtime errors. Channel approval and consent remain unchanged.
+- [x] Replace all three uploaded prompts; v1.1 handoff/compact v4 inputs and internal draft disclaimers implemented. Prompt parsing, missing-touch and ineligible-channel recovery tested; real email and WhatsApp drafts verified on Vizign with no input requests or sends. Sending safeguards and provider-denial/refusal stops preserved; 39 relevant tests pass.
+- [x] Generate from available facts and uploaded offer/product/message prompts without needs-input, enrichment, persona or designation prerequisites; verified a single draft and three saved Outreach messages on Vizign Archi Studio, no input requests, WhatsApp correctly skipped without consent; 26 relevant tests pass, no messages sent.
+- [x] Complete the uploaded offer-first two-step message chain with prompt defaults (no offer settings), review cautions, do-not-pitch and WhatsApp eligibility safeguards; real single drafts and four saved Discovery follow-ups verified on Srisa Studio, review survives reload, safety tests pass; no messages sent.
+- [x] Remove offer settings and generate according to the supplied prompts, with optional offers unavailable by default; settings page/link and saved-catalog reads removed, 23 tests pass and real drafting verified.
+- [x] Add lead Instagram posts section and separate copy-only comment draft action; authenticated waiting state checked on Srisa Studio, eight tests pass and live Haiku comment drafting verified with sample caption. Fetching does not invoke AI.
+- [ ] Activate and verify real five-post Meta Business Discovery reads using the user's existing app — waiting for securely connected access token with Instagram permissions and querying professional Instagram account ID.
+- [x] Switch single message drafts, contact/firm sequences and AI redrafts to Haiku 4.5; verified real email/WhatsApp drafts and saved introduction redraft on Studio Course, with successful Haiku gateway logs and 14 tests. Research model, cadence and approvals unchanged; no messages sent.
+- [x] Show assignee initials on pipeline cards and remember filters across navigation; verified initials/full-name tooltip and search/source retention after switching to Funnel and back on signed-in leads; 4 persistence tests pass.
+- [x] Apply the uploaded conversational sales-outreach prompt to existing GPT single drafts, sequences and AI redrafts; preserve schedules and approvals. Verified email and WhatsApp drafts on Studio Course without sending; 12 cadence/contact/send tests pass. Existing saved drafts are unchanged.
+- [x] Import both Raipur spreadsheets: 240 new firms saved with Notion source, Raipur/Chhattisgarh, Outreach and unclassified status; 6 existing matches skipped and repeated rows combined. Verified all 240 saved values and opened Studio MOD and A.M. Associates signed in, including extra email selection and original-location notes; source test passes. No messages sent.
+- [x] Click Funnel tiles and numeric totals to view contributing organisations in a right-hand panel; verified Sent to organisations opens all 19 real firms, search, scheduled and reply panels; 5 tests pass.
+- [x] Expand Funnel into organisation and team reporting with sends, schedules, contact follow-ups, replies, delivery outcomes, period/owner/stage filters and CSV export; verified 754 real firms, BetweenSpaces detail, export, period filtering and phone layout; 5 tests pass. No messages sent.
+- [x] Separate contact sequences with designation-aware AI drafts, independent approvals, schedules and recipient-specific reply stopping; verified two contacts' drafts and saved read-back in the signed-in page, plus 34 tests. No live messages sent.
+- [x] Add named lead contacts, selected recipients per sequence channel, personalised sends and reply matching; verified saving/read-back and selection persistence on a signed-in lead; transport and retry tests pass without live sends.
+- [x] Pipeline board "+N more" expands its own column in place (30 more per click, Show less to collapse) instead of jumping to list view; verified cards 30→34→30 on a filtered column with the board staying open.
+- [x] Show all firm sections on one page with smooth-scrolling left navigation; verified all eight visible sections, section jumps, and unsent draft preservation on a real firm.
+- [x] Solid lead-status badges, Team follow-ups naming, and left-hand firm section navigation; verified on Harshi architect with section switching, preserved drafts, and desktop/mobile layouts.
+- [x] Add per-firm Hot, Cold, or Junk status, editing and pipeline filtering; tested saving and reading back on a real firm, restoring its original status.
+- [x] Connect approved shegruhmessage template for manual and scheduled personalised WhatsApp sends; request mapping tested without sending.
+- [x] Per-message WhatsApp template choice: shegruhmessage (intro) or outreach1 (follow-up) dropdown on each lead follow-up; first message defaults to intro, later ones to outreach1; template-ID mapping tested.
+- [ ] Verify a real approved-template send and recipient delivery — requires a test recipient available in the signed-in pipeline (current preview returned no firms).
+- [x] Phase 1: auth (first user admin), firms, kanban + list, funnel, auto follow-ups, firm page, seed data
+- [x] Phase 2: WhatsApp via Gupshup (send from firm page, webhook for status + replies, chat timeline, message tracker)
+- [x] Bulk email via Zoho Mail (email_messages table, bulk send screen with {{name}}/{{studio}} placeholders, email history on firm page) — code ready; activation pending Zoho credentials (client ID, client secret, refresh token, sender email; region defaults to zoho.in)
+- [x] Lead enrichment: Firecrawl web search + AI research brief and personalised email on firm page
+- [x] Import leads from Excel/CSV (column matching, dedupe, +91 phones)
+- [x] State + city classification: firms.state column, state/city filters with counts, group-by state or city view
+- [x] Per-lead stage follow-up messages (drafted on Enrich, review + approve, auto-send hourly)
+- [ ] Phase 3: KPIs (weekly metrics, day 30/60/90, activation checklist, health score)
+- [x] Saved email + WhatsApp message per stage (Messages by stage tab; use on firm page; send email to whole stage); show "No email/No phone" but still allow drafting
+- [x] Add your own follow-up (task + due date) on firm page
+- [x] Team tab: admin adds members (email, password, role) and removes them; remove sign-up from login
+- [x] WhatsApp status ticks per firm on board cards + list
+- [x] Campaigns: create/edit/delete, firms by stage/status/search/tags, test drafts on up to 3 firms, launch auto research + 3 messages (~1 firm/min), missing-contact and unable-to-send tabs; verified preview and missing-contact path without sending.
+- [x] Pipeline cards show the research fit score and team size when that data exists (e.g. Fit 9.1/10 · A, 7 people); verified on a real card, score kept on the brief's own scale.
+- [x] Pipeline filters for fit score bands (Strong/Middling/Weak/No score) and team-size bands (1-5, 6-15, 16-50, 50+, none); verified counts match the database and filters persist across tabs.
+- [x] Re-linked Firecrawl after the workspace move (direct-API connection) and pointed enrichment at it directly; live search and scrape verified, transport test added. Instagram connection skipped by your choice.
+- [x] Campaign detail: "Sent" tab lists every organization the campaign actually messaged (channels, addresses, count, last sent), each firm linking to its lead page; verified 157 rows and a firm-page click.
+
+- [x] Campaign Sent list: filter by channel (All / Email / WhatsApp) with per-channel counts and message counts.

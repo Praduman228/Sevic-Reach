@@ -1,0 +1,14 @@
+CREATE TABLE public.contact_sequence_messages (LIKE public.sequence_messages INCLUDING DEFAULTS INCLUDING CONSTRAINTS);
+ALTER TABLE public.contact_sequence_messages ADD PRIMARY KEY (id), ADD COLUMN contact_id uuid REFERENCES public.firm_contacts(id) ON DELETE SET NULL, ADD CONSTRAINT contact_sequence_firm_fk FOREIGN KEY (firm_id) REFERENCES public.firms(id) ON DELETE CASCADE, ADD CONSTRAINT contact_sequence_step_unique UNIQUE (firm_id, stage, contact_id, step);
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_sequence_messages TO authenticated;
+GRANT ALL ON public.contact_sequence_messages TO service_role;
+ALTER TABLE public.contact_sequence_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "team contact sequences" ON public.contact_sequence_messages FOR ALL TO authenticated USING (public.is_team_member(auth.uid())) WITH CHECK (public.is_team_member(auth.uid()) AND EXISTS (SELECT 1 FROM public.firm_contacts c WHERE c.id = contact_id AND c.firm_id = contact_sequence_messages.firm_id));
+CREATE INDEX contact_sequences_due ON public.contact_sequence_messages(scheduled_at) WHERE email_status = 'approved' OR whatsapp_status = 'approved';
+CREATE TABLE public.contact_sequence_deliveries (LIKE public.sequence_deliveries INCLUDING DEFAULTS INCLUDING CONSTRAINTS);
+ALTER TABLE public.contact_sequence_deliveries ADD PRIMARY KEY (id), ADD CONSTRAINT contact_delivery_sequence_fk FOREIGN KEY (sequence_id) REFERENCES public.contact_sequence_messages(id) ON DELETE CASCADE, ADD CONSTRAINT contact_delivery_destination_unique UNIQUE(sequence_id, channel, address);
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.contact_sequence_deliveries TO authenticated;
+GRANT ALL ON public.contact_sequence_deliveries TO service_role;
+ALTER TABLE public.contact_sequence_deliveries ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "team contact deliveries" ON public.contact_sequence_deliveries FOR ALL TO authenticated USING (public.is_team_member(auth.uid())) WITH CHECK (public.is_team_member(auth.uid()));
+COMMENT ON TABLE public.contact_sequence_messages IS 'Independent schedules per named contact; legacy firm sequences remain unchanged.';

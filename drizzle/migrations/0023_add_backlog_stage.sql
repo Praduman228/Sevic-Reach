@@ -1,0 +1,1 @@
+ALTER TYPE public.firm_stage ADD VALUE IF NOT EXISTS 'backlog' BEFORE 'outreach';

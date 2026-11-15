@@ -1,0 +1,1 @@
+ALTER TYPE public.firm_source ADD VALUE IF NOT EXISTS 'notion';
